@@ -1,0 +1,40 @@
+REQUIREMENTS
+
+*Bouncy Castle*
+
+BCTransferAPIClient (and subclasses) require bouncy castle; download the latest
+bcprov jar for your JDK release:
+
+http://www.bouncycastle.org/latest_releases.html
+
+and place it in a lib sub directory. The "ext" version with the IDEA algorithm
+is not required. Tested with jdk16 versions 145 and 146.
+
+For example:
+
+VERSION=jdk16-146
+mkdir -p lib
+cd lib
+wget http://www.bouncycastle.org/download/bcprov-${VERSION}.jar
+
+*Ant*
+
+Required to build the code.
+
+
+BUILDING
+
+Run ant in the project root.
+
+
+EXAMPLE RUN
+
+Using a certificate fetched with myproxy-logon for local user with id 1000,
+and globusonline user 'username':
+
+USER_CERT=/tmp/x509up_u1000
+USER_KEY=/tmp/x509up_u1000
+
+java -cp lib/bcprov-jdk16-146.jar:build/jar/TransferAPIClient.jar \
+    org.globusonline.Example username \
+    ca/gd-bundle_ca.cert "$USER_CERT" "$USER_KEY"
