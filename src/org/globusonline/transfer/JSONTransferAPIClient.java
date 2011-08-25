@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.globusonline;
+package org.globusonline.transfer;
 
 import java.io.*;
 
@@ -55,7 +55,7 @@ public class JSONTransferAPIClient extends BCTransferAPIClient {
     public static void main(String[] args) {
         if (args.length < 1) {
             System.err.println(
-                "Usage: java org.globusonline.JSONTransferAPIClient "
+                "Usage: java org.globusonline.transfer.JSONTransferAPIClient "
                 + "username [path [cafile certfile keyfile [baseurl]]]");
             System.exit(1);
         }

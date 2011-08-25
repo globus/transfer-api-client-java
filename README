@@ -36,5 +36,5 @@ USER_CERT=/tmp/x509up_u1000
 USER_KEY=/tmp/x509up_u1000
 
 java -cp lib/bcprov-jdk16-146.jar:build/jar/TransferAPIClient.jar \
-    org.globusonline.Example username \
+    org.globusonline.transfer.Example username \
     ca/gd-bundle_ca.cert "$USER_CERT" "$USER_KEY"

@@ -1,4 +1,4 @@
-package org.globusonline;
+package org.globusonline.transfer;
 
 import java.security.GeneralSecurityException;
 import java.util.*;
@@ -21,7 +21,7 @@ public class Example {
     public static void main(String args[]) {
         if (args.length < 1) {
             System.err.println(
-                "Usage: java org.globusonline.Example "
+                "Usage: java org.globusonline.transfer.Example "
                 + "username [cafile certfile keyfile [baseurl]]]");
             System.exit(1);
         }
