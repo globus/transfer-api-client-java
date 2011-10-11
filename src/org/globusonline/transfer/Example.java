@@ -154,10 +154,8 @@ public class Example {
 
     public boolean autoActivate(String endpointName)
     throws IOException, JSONException, GeneralSecurityException, APIError {
-        // Note: in a later release, auto-activation will be done at
-        // /autoactivate instead.
         String resource = BaseTransferAPIClient.endpointPath(endpointName)
-                          + "/activate";
+                          + "/autoactivate";
         JSONTransferAPIClient.Result r = client.postResult(resource, null,
                                                            null);
         String code = r.document.getString("code");
