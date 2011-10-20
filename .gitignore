@@ -1,2 +1,7 @@
 build
 lib/*.jar
+target
+**~
+.settings
+.project
+.classpath
