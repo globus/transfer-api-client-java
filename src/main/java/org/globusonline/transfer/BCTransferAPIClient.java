@@ -178,10 +178,10 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
             int i = 0;
             while ((o = r.readObject()) != null) {
                 cert = (X509Certificate) o;
-                System.out.println("trusted cert subject: "
-                                   + cert.getSubjectX500Principal());
-                System.out.println("trusted cert issuer: "
-                                   + cert.getIssuerX500Principal());
+//                System.out.println("trusted cert subject: "
+//                                   + cert.getSubjectX500Principal());
+//                System.out.println("trusted cert issuer: "
+//                                   + cert.getIssuerX500Principal());
 
                 ks.setEntry("server-ca" + i,
                             new KeyStore.TrustedCertificateEntry(cert), null);
@@ -236,10 +236,10 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
                 if (!(o instanceof X509Certificate))
                     continue;
                 cert = (X509Certificate) o;
-                System.out.println("client cert subject: "
-                                   + cert.getSubjectX500Principal());
-                System.out.println("client cert issuer: "
-                                   + cert.getIssuerX500Principal());
+//                System.out.println("client cert subject: "
+//                                   + cert.getSubjectX500Principal());
+//                System.out.println("client cert issuer: "
+//                                   + cert.getIssuerX500Principal());
                 chain.add(cert);
             }
         } finally {
