@@ -38,3 +38,9 @@ USER_KEY=/tmp/x509up_u1000
 java -cp lib/bcprov-jdk16-146.jar:build/jar/TransferAPIClient.jar \
     org.globusonline.transfer.Example username \
     ca/gd-bundle_ca.cert "$USER_CERT" "$USER_KEY"
+
+*Maven*
+
+You can also build this project via maven, as usual, just run:
+
+    mvn clean install

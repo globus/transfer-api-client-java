@@ -8,7 +8,7 @@
   <property name="runarg.baseUrl"
            value="https://transfer.api.globusonline.org/v0.10"/>
 
-  <property name="src.dir" value="src"/>
+  <property name="src.dir" value="src/main/java"/>
   <property name="build.dir" value="build"/>
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="jar.dir" value="${build.dir}/jar"/>
