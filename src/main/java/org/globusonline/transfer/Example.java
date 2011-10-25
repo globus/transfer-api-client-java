@@ -56,6 +56,7 @@ public class Example {
 
     public void run()
     throws IOException, JSONException, GeneralSecurityException, APIError {
+        JSONTransferAPIClient.Result r;
         System.out.println("=== Before Transfer ===");
 
         displayTasksummary();
@@ -71,8 +72,7 @@ public class Example {
         displayLs("go#ep1", "~");
         displayLs("go#ep2", "~");
 
-        JSONTransferAPIClient.Result r = client.getResult(
-                                                    "/transfer/submission_id");
+        r = client.getResult("/transfer/submission_id");
         String submissionId = r.document.getString("value");
         JSONObject transfer = new JSONObject();
         transfer.put("DATA_TYPE", "transfer");
@@ -85,7 +85,7 @@ public class Example {
         item.put("destination_path", "~/api-example-bashrc-copy");
         transfer.append("DATA", item);
 
-        r = client.postResult("/transfer", transfer.toString(), null);
+        r = client.postResult("/transfer", transfer, null);
         String taskId = r.document.getString("task_id");
         if (!waitForTask(taskId, 120)) {
             System.out.println(
@@ -97,6 +97,29 @@ public class Example {
 
         displayTasksummary();
         displayLs("go#ep2", "~");
+
+        System.out.println("=== Endpoint Management ===");
+        String code;
+        String copyName = "example_copygoep1";
+
+        code = copyEndpoint("go#ep1", copyName);
+        System.out.println("copy go#ep1 to " + copyName + ": " + code);
+
+        code = setEndpointDescription(copyName, "copy of go#ep1");
+        System.out.println("endpoint update: " + code);
+
+        r = client.getResult(BaseTransferAPIClient.endpointPath(copyName));
+        System.out.println("description after update: "
+                           + r.document.getString("description"));
+
+        code = deleteEndpoint(copyName);
+        System.out.println("endpoint delete: " + code);
+
+        try {
+            r = client.getResult(BaseTransferAPIClient.endpointPath(copyName));
+        } catch(APIError e) {
+            System.out.println("get on deleted endpoint raised APIError: " + e);
+        }
     }
 
     public void displayTasksummary()
@@ -217,5 +240,37 @@ public class Example {
         if (status.equals("ACTIVE"))
             return false;
         return true;
+    }
+
+    public String copyEndpoint(String endpointName, String copyName)
+    throws IOException, JSONException, GeneralSecurityException, APIError {
+        String resource = BaseTransferAPIClient.endpointPath(endpointName);
+        JSONTransferAPIClient.Result r = client.getResult(resource);
+        JSONObject endpoint = r.document;
+        endpoint.put("name", copyName);
+        endpoint.remove("username");
+        endpoint.remove("canonical_name");
+
+        r = client.postResult("/endpoint", endpoint);
+        return r.document.getString("code");
+    }
+
+    public String setEndpointDescription(String endpointName,
+                                          String description)
+    throws IOException, JSONException, GeneralSecurityException, APIError {
+        String resource = BaseTransferAPIClient.endpointPath(endpointName);
+        JSONObject o = new JSONObject();
+        o.put("DATA_TYPE", "endpoint");
+        o.put("description", description);
+
+        JSONTransferAPIClient.Result r = client.putResult(resource, o);
+        return r.document.getString("code");
+    }
+
+    public String deleteEndpoint(String endpointName)
+    throws IOException, JSONException, GeneralSecurityException, APIError {
+        String resource = BaseTransferAPIClient.endpointPath(endpointName);
+        JSONTransferAPIClient.Result r = client.deleteResult(resource);
+        return r.document.getString("code");
     }
 }

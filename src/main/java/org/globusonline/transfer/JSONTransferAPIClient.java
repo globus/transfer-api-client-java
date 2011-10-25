@@ -166,25 +166,59 @@ public class JSONTransferAPIClient extends BCTransferAPIClient {
         throws IOException, MalformedURLException, GeneralSecurityException,
                JSONException, APIError {
 
-        HttpsURLConnection c = request("GET", path, null, queryParams);
-
-        Result result = new Result();
-        result.statusCode = c.getResponseCode();
-        result.statusMessage = c.getResponseMessage();
-
-        result.document = new JSONObject(readString(c.getInputStream()));
-
-        c.disconnect();
-
-        return result;
+        return requestResult("GET", path, null, queryParams);
     }
 
-    public Result postResult(String path, String data,
+    public Result postResult(String path, JSONObject data)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        return postResult(path, data, null);
+    }
+
+    public Result postResult(String path, JSONObject data,
                              Map<String, String> queryParams)
         throws IOException, MalformedURLException, GeneralSecurityException,
                JSONException, APIError {
 
-        HttpsURLConnection c = request("POST", path, data, queryParams);
+        return requestResult("POST", path, data, queryParams);
+    }
+
+    public Result putResult(String path, JSONObject data)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        return putResult(path, data, null);
+    }
+
+    public Result putResult(String path, JSONObject data,
+                            Map<String, String> queryParams)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+
+        return requestResult("PUT", path, data, queryParams);
+    }
+
+    public Result deleteResult(String path)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        return deleteResult(path, null);
+    }
+
+    public Result deleteResult(String path, Map<String, String> queryParams)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+
+        return requestResult("DELETE", path, null, queryParams);
+    }
+
+    public Result requestResult(String method, String path, JSONObject data,
+                                Map<String, String> queryParams)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        String stringData = null;
+        if (data != null)
+            stringData = data.toString();
+
+        HttpsURLConnection c = request(method, path, stringData, queryParams);
 
         Result result = new Result();
         result.statusCode = c.getResponseCode();
@@ -196,7 +230,6 @@ public class JSONTransferAPIClient extends BCTransferAPIClient {
 
         return result;
     }
-
 
     public static class Result {
         public JSONObject document;
