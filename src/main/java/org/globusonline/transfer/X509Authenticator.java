@@ -4,9 +4,14 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class X509Authenticator implements Authenticator {
 
-	public void authenticateConnection(HttpsURLConnection c) {
-		// TODO Auto-generated method stub
+	private String username;
+	
+	public X509Authenticator(String username){
+		this.username = username;
+	}
 
+	public void authenticateConnection(HttpsURLConnection c) {
+        c.setRequestProperty("X-Transfer-API-X509-User", this.username);
 	}
 
 }

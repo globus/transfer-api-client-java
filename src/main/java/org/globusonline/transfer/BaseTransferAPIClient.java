@@ -53,6 +53,7 @@ public class BaseTransferAPIClient {
     protected KeyManager[] keyManagers;
     protected TrustManager[] trustManagers;
     protected SSLSocketFactory socketFactory;
+	private X509Authenticator authenticator;
 
     static final String VERSION = "v0.10";
     static final String DEFAULT_BASE_URL =
@@ -109,7 +110,7 @@ public class BaseTransferAPIClient {
     public BaseTransferAPIClient(String username, String format,
                                  TrustManager[] trustManagers,
                                  KeyManager[] keyManagers, String baseUrl) {
-        this.username = username;
+        this.authenticator = new X509Authenticator(username);
         this.format = format;
         if (baseUrl == null) {
             this.baseUrl = BaseTransferAPIClient.DEFAULT_BASE_URL;
@@ -150,7 +151,10 @@ public class BaseTransferAPIClient {
         c.setFollowRedirects(false);
         c.setUseCaches(false);
         c.setDoInput(true);
-        c.setRequestProperty("X-Transfer-API-X509-User", this.username);
+        
+        // Set appropriate headers for authentication
+        authenticator.authenticateConnection(c);
+        
         c.setRequestProperty("X-Transfer-API-Client", this.getClass().getName()
                              + "/" + this.CLIENT_VERSION);
         c.setRequestProperty("Accept", this.format);
@@ -269,4 +273,12 @@ public class BaseTransferAPIClient {
     throws UnsupportedEncodingException {
         return "/endpoint/" + URLEncoder.encode(endpointName);
     }
+
+	/**
+	 * @return the authenticator
+	 */
+	public X509Authenticator getAuthenticator() {
+		return authenticator;
+	}
+
 }
