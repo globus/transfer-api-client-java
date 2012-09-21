@@ -29,12 +29,17 @@ import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.HostnameVerifier;
 
 /**
  * Basic client for interacting with the Globus Online Transfer API as a single
@@ -56,7 +61,11 @@ public class BaseTransferAPIClient {
 
     static final String VERSION = "v0.10";
     static final String DEFAULT_BASE_URL =
+                    "https://transfer.test.api.globusonline.org/" + VERSION;
+    /*
+    static final String DEFAULT_BASE_URL =
                     "https://transfer.api.globusonline.org/" + VERSION;
+                    */
 
     public static final String FORMAT_JSON = "application/json";
     public static final String FORMAT_XML = "application/xml";
@@ -143,9 +152,11 @@ public class BaseTransferAPIClient {
         }
 
         URL url = new URL(this.baseUrl + path);
+
+        System.out.println("url: " + this.baseUrl + path);
         HttpsURLConnection c = (HttpsURLConnection) url.openConnection();
         c.setConnectTimeout(this.timeout);
-        c.setSSLSocketFactory(this.socketFactory);
+        /* c.setSSLSocketFactory(this.socketFactory);*/
         c.setRequestMethod(method);
         c.setFollowRedirects(false);
         c.setUseCaches(false);
@@ -200,12 +211,33 @@ public class BaseTransferAPIClient {
         this.timeout = milliseconds;
     }
 
+
+        // Create a trust manager that does not validate certificate chains
+    static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+        public X509Certificate[] getAcceptedIssuers() { return null;}
+        public void checkClientTrusted(X509Certificate[] certs, String authType) { return; }
+        public void checkServerTrusted(X509Certificate[] certs, String authType) { return; }
+        }};
+
     protected void initSocketFactory(boolean force)
                     throws KeyManagementException, NoSuchAlgorithmException {
+        HostnameVerifier hv = new HostnameVerifier() {
+            public boolean verify(String urlHostName, SSLSession session) {
+            System.out.println("Warning: URL Host: " + urlHostName
+                + " vs. " + session.getPeerHost());
+            return true;
+            }
+        };
         if (this.socketFactory == null || force) {
+            /*
             SSLContext context = SSLContext.getInstance("TLS");
             context.init(this.keyManagers, this.trustManagers, null);
             this.socketFactory = context.getSocketFactory();
+            */
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier(hv);
         }
     }
 

@@ -6,7 +6,8 @@
   <property name="runarg.clientCert" value="/tmp/x509up_u1000"/>
   <property name="runarg.clientKey" value="/tmp/x509up_u1000"/>
   <property name="runarg.baseUrl"
-           value="https://transfer.api.globusonline.org/v0.10"/>
+      value="https://transfer.test.api.globusonline.org/v0.10"/>
+    
 
   <property name="src.dir" value="src/main/java"/>
   <property name="build.dir" value="build"/>
@@ -27,6 +28,7 @@
   <target name="compile">
     <mkdir dir="${classes.dir}"/>
     <javac srcdir="${src.dir}" destdir="${classes.dir}"
+        debug="true" debuglevel="lines, vars, and source"
            classpathref="classpath">
         <!--compilerarg value="-Xlint:unchecked"/-->
     </javac>
