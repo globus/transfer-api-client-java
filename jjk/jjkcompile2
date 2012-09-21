@@ -12,4 +12,6 @@ javac \
         /home/koa/java/transfer-api-client-java/src/main/java/org/json/JSONException.java \
         /home/koa/java/transfer-api-client-java/src/main/java/org/json/JSONObject.java \
         /home/koa/java/transfer-api-client-java/src/main/java/org/json/JSONString.java \
-        /home/koa/java/transfer-api-client-java/src/main/java/org/json/JSONTokener.java
+        /home/koa/java/transfer-api-client-java/src/main/java/org/json/JSONTokener.java \
+        /home/koa/java/transfer-api-client-java/src/main/java/org/globusonline/transfer/Authenticator.java \
+        /home/koa/java/transfer-api-client-java/src/main/java/org/globusonline/transfer/GoauthAuthenticator.java
