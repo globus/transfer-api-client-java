@@ -62,11 +62,7 @@ public class BaseTransferAPIClient {
 
     static final String VERSION = "v0.10";
     static final String DEFAULT_BASE_URL =
-                    "https://transfer.test.api.globusonline.org/" + VERSION;
-    /*
-    static final String DEFAULT_BASE_URL =
                     "https://transfer.api.globusonline.org/" + VERSION;
-                    */
 
     public static final String FORMAT_JSON = "application/json";
     public static final String FORMAT_XML = "application/xml";
@@ -159,10 +155,6 @@ public class BaseTransferAPIClient {
 
         URL url = new URL(this.baseUrl + path);
 
-        /***/
-        // String goauthToken = "un=kordas2|tokenid=42a96692-041a-11e2-b73a-1231381a5994|expiry=1379788160|client_id=kordas2|token_type=Bearer|SigningSubject=https://graph.api.test.globuscs.info/goauth/keys/ecae0a74-0287-11e2-b73a-1231381a5994|sig=50b16677918b3359aeec52d0d117fb52748581fef7836ee1ec7da9ad3028d97390fd6f90209c23fb02998a8534a378fb73a8f41e72131db64c3700cf55129ce29e7e9043bfce5201efd6730d449ebbd6af8c7b6f1fb50aa88c0c96cdfb81b36106fc75674bf9506de25bb7c0ea0d22b2c2fd02e060edfb1be9d22546be582463"; // Hardcode
-        // GoauthAuthenticator goauth = new GoauthAuthenticator(goauthToken);
-        /***/
         System.out.println("url: " + this.baseUrl + path);
         HttpsURLConnection c = (HttpsURLConnection) url.openConnection();
         c.setConnectTimeout(this.timeout);
@@ -246,6 +238,7 @@ public class BaseTransferAPIClient {
             context.init(this.keyManagers, this.trustManagers, null);
             this.socketFactory = context.getSocketFactory();
             */
+
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
