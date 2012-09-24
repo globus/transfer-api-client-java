@@ -42,7 +42,8 @@ public class GoauthExample {
         try {
             System.out.println("using token: " + oauthToken);
             Authenticator authenticator = new GoauthAuthenticator(oauthToken);
-            JSONTransferAPIClient c = new JSONTransferAPIClient(username, baseUrl);
+            JSONTransferAPIClient c = new JSONTransferAPIClient(username, 
+                        cafile, baseUrl);
             c.setAuthenticator(authenticator);
             System.out.println("base url: " + c.getBaseUrl());
             GoauthExample e = new GoauthExample(c);

@@ -158,7 +158,7 @@ public class BaseTransferAPIClient {
         System.out.println("url: " + this.baseUrl + path);
         HttpsURLConnection c = (HttpsURLConnection) url.openConnection();
         c.setConnectTimeout(this.timeout);
-        /* c.setSSLSocketFactory(this.socketFactory);*/
+        c.setSSLSocketFactory(this.socketFactory);
         c.setRequestMethod(method);
         c.setFollowRedirects(false);
         c.setUseCaches(false);
@@ -168,7 +168,9 @@ public class BaseTransferAPIClient {
                              + "/" + this.CLIENT_VERSION);
         c.setRequestProperty("Accept", this.format);
         // goauth.authenticateConnection(c);
-        this.authenticator.authenticateConnection(c);
+        if (this.authenticator != null) {
+            this.authenticator.authenticateConnection(c);
+        }
         if (data != null) {
             c.setDoOutput(true);
             c.setRequestProperty("Content-Type", this.format);
@@ -215,14 +217,6 @@ public class BaseTransferAPIClient {
         this.timeout = milliseconds;
     }
 
-
-        // Create a trust manager that does not validate certificate chains
-    static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-        public X509Certificate[] getAcceptedIssuers() { return null;}
-        public void checkClientTrusted(X509Certificate[] certs, String authType) { return; }
-        public void checkServerTrusted(X509Certificate[] certs, String authType) { return; }
-        }};
-
     protected void initSocketFactory(boolean force)
                     throws KeyManagementException, NoSuchAlgorithmException {
         HostnameVerifier hv = new HostnameVerifier() {
@@ -233,16 +227,9 @@ public class BaseTransferAPIClient {
             }
         };
         if (this.socketFactory == null || force) {
-            /*
             SSLContext context = SSLContext.getInstance("TLS");
             context.init(this.keyManagers, this.trustManagers, null);
             this.socketFactory = context.getSocketFactory();
-            */
-
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(hv);
         }
     }
 
