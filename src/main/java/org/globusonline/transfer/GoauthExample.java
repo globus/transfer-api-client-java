@@ -9,12 +9,12 @@ import java.text.SimpleDateFormat;
 
 import org.json.*;
 
-public class Example {
+public class GoauthExample {
     private JSONTransferAPIClient client;
     private static DateFormat isoDateFormat =
                             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
-    public Example(JSONTransferAPIClient client) {
+    public GoauthExample(JSONTransferAPIClient client) {
         this.client = client;
     }
 
@@ -22,7 +22,7 @@ public class Example {
         if (args.length < 1) {
             System.err.println(
                 "Usage: java org.globusonline.transfer.GoauthExample "
-                + "username [cafile certfile keyfile [baseurl]]]");
+                + "username [cafile oauthToken [baseurl]]]");
             System.exit(1);
         }
         String username = args[0];
@@ -31,23 +31,21 @@ public class Example {
         if (args.length > 1 && args[1].length() > 0)
             cafile = args[1];
 
-        String certfile = null;
+        String oauthToken = null;
         if (args.length > 2 && args[2].length() > 0)
-            certfile = args[2];
-
-        String keyfile = null;
-        if (args.length > 3 && args[3].length() > 0)
-            keyfile = args[3];
+            oauthToken  = args[2];
 
         String baseUrl = null;
-        if (args.length > 4 && args[4].length() > 0)
-            baseUrl = args[4];
+        if (args.length > 3 && args[3].length() > 0)
+            baseUrl = args[3];
 
         try {
-            JSONTransferAPIClient c = new JSONTransferAPIClient(username,
-                                         cafile, certfile, keyfile, baseUrl);
+            System.out.println("using token: " + oauthToken);
+            Authenticator authenticator = new GoauthAuthenticator(oauthToken);
+            JSONTransferAPIClient c = new JSONTransferAPIClient(username, baseUrl);
+            c.setAuthenticator(authenticator);
             System.out.println("base url: " + c.getBaseUrl());
-            Example e = new Example(c);
+            GoauthExample e = new GoauthExample(c);
             e.run();
         } catch (Exception e) {
             e.printStackTrace();

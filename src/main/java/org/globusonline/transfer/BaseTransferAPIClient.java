@@ -52,6 +52,7 @@ public class BaseTransferAPIClient {
     protected String username;
     protected String baseUrl;
     protected String format;
+    protected Authenticator authenticator;
 
     protected int timeout = 30 * 1000; // 30 seconds, in milliseconds.
 
@@ -132,6 +133,11 @@ public class BaseTransferAPIClient {
         this.socketFactory = null;
     }
 
+    public void setAuthenticator(Authenticator authenticator)
+    {
+        this.authenticator = authenticator;
+    }
+
     public HttpsURLConnection request(String method, String path)
           throws IOException, MalformedURLException, GeneralSecurityException,
                  APIError {
@@ -153,6 +159,10 @@ public class BaseTransferAPIClient {
 
         URL url = new URL(this.baseUrl + path);
 
+        /***/
+        // String goauthToken = "un=kordas2|tokenid=42a96692-041a-11e2-b73a-1231381a5994|expiry=1379788160|client_id=kordas2|token_type=Bearer|SigningSubject=https://graph.api.test.globuscs.info/goauth/keys/ecae0a74-0287-11e2-b73a-1231381a5994|sig=50b16677918b3359aeec52d0d117fb52748581fef7836ee1ec7da9ad3028d97390fd6f90209c23fb02998a8534a378fb73a8f41e72131db64c3700cf55129ce29e7e9043bfce5201efd6730d449ebbd6af8c7b6f1fb50aa88c0c96cdfb81b36106fc75674bf9506de25bb7c0ea0d22b2c2fd02e060edfb1be9d22546be582463"; // Hardcode
+        // GoauthAuthenticator goauth = new GoauthAuthenticator(goauthToken);
+        /***/
         System.out.println("url: " + this.baseUrl + path);
         HttpsURLConnection c = (HttpsURLConnection) url.openConnection();
         c.setConnectTimeout(this.timeout);
@@ -165,6 +175,8 @@ public class BaseTransferAPIClient {
         c.setRequestProperty("X-Transfer-API-Client", this.getClass().getName()
                              + "/" + this.CLIENT_VERSION);
         c.setRequestProperty("Accept", this.format);
+        // goauth.authenticateConnection(c);
+        this.authenticator.authenticateConnection(c);
         if (data != null) {
             c.setDoOutput(true);
             c.setRequestProperty("Content-Type", this.format);

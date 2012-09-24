@@ -6,6 +6,7 @@ javac \
         /home/koa/java/transfer-api-client-java/src/main/java/org/globusonline/transfer/BaseTransferAPIClient.java \
         /home/koa/java/transfer-api-client-java/src/main/java/org/globusonline/transfer/ErrorTest.java \
         /home/koa/java/transfer-api-client-java/src/main/java/org/globusonline/transfer/Example.java \
+        /home/koa/java/transfer-api-client-java/src/main/java/org/globusonline/transfer/GoauthExample.java \
         /home/koa/java/transfer-api-client-java/src/main/java/org/globusonline/transfer/JSONTransferAPIClient.java \
         /home/koa/java/transfer-api-client-java/src/main/java/org/globusonline/transfer/XMLDomTransferAPIClient.java \
         /home/koa/java/transfer-api-client-java/src/main/java/org/json/JSONArray.java \
