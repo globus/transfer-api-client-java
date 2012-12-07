@@ -102,6 +102,12 @@ public class JSONTransferAPIClient extends BCTransferAPIClient {
         this(username, null, null, null, baseUrl);
     }
 
+    public JSONTransferAPIClient(String username, String trustedCAFile,
+                                 String baseUrl)
+    throws KeyManagementException, NoSuchAlgorithmException {
+        this(username, trustedCAFile, null, null, baseUrl);
+    }
+
     public JSONTransferAPIClient(String username,
                       String trustedCAFile, String certFile, String keyFile)
             throws KeyManagementException, NoSuchAlgorithmException {

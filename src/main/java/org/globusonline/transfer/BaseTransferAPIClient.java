@@ -47,6 +47,7 @@ public class BaseTransferAPIClient {
     protected String username;
     protected String baseUrl;
     protected String format;
+    protected Authenticator authenticator;
 
     protected int timeout = 30 * 1000; // 30 seconds, in milliseconds.
 
@@ -123,6 +124,11 @@ public class BaseTransferAPIClient {
         this.socketFactory = null;
     }
 
+    public void setAuthenticator(Authenticator authenticator)
+    {
+        this.authenticator = authenticator;
+    }
+
     public HttpsURLConnection request(String method, String path)
           throws IOException, MalformedURLException, GeneralSecurityException,
                  APIError {
@@ -143,6 +149,7 @@ public class BaseTransferAPIClient {
         }
 
         URL url = new URL(this.baseUrl + path);
+
         HttpsURLConnection c = (HttpsURLConnection) url.openConnection();
         c.setConnectTimeout(this.timeout);
         c.setSSLSocketFactory(this.socketFactory);
@@ -154,6 +161,9 @@ public class BaseTransferAPIClient {
         c.setRequestProperty("X-Transfer-API-Client", this.getClass().getName()
                              + "/" + this.CLIENT_VERSION);
         c.setRequestProperty("Accept", this.format);
+        if (this.authenticator != null) {
+            this.authenticator.authenticateConnection(c);
+        }
         if (data != null) {
             c.setDoOutput(true);
             c.setRequestProperty("Content-Type", this.format);
