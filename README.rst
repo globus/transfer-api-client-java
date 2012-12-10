@@ -1,6 +1,8 @@
-REQUIREMENTS
+Requirements
+============
 
-*Bouncy Castle*
+Bouncy Castle
+-------------
 
 BCTransferAPIClient (and subclasses) require bouncy castle; download the latest
 bcprov jar for your JDK release:
@@ -17,34 +19,45 @@ For example::
     cd lib
     wget http://www.bouncycastle.org/download/bcprov-${VERSION}.jar
 
-*Ant or Maven*
+
+Ant or Maven
+------------
 
 Required to build the code. Maven can also be used to automatically fetch
 dependencies (currently just Bouncy Castle).
 
 
-BUILDING
+Building
+========
 
-*Ant*
+Ant
+---
 
 Run ant in the project root. It will compile the source and create
 ``build/jar/TransferAPIClient.jar``.
 
-*Maven*
+
+Maven
+-----
 
 You can also build this project via maven, as usual, just run::
 
     mvn clean install
 
 
-EXAMPLE RUN
+Example Run
+===========
 
 The example programs exercises various parts of the API including
 transferring a dot file between the tutorial endpoints and creating and then
 deleting an endpoint. All users have access to the tutorial endpoints
 (subject to a small quota), so it should work for any GO user.
 
-*X509 Authentication*
+There are two versions - one using X509 authentication and another using
+Goauth; both execute the same API commands after authenticating.
+
+X509 Authentication
+-------------------
 
 Using a certificate fetched with myproxy-logon for local user with id 1000::
 
@@ -59,7 +72,9 @@ Using a certificate fetched with myproxy-logon for local user with id 1000::
 For this to work the certificate must be signed by a trusted grid CA and
 associated with your GO account.
 
-*GoAuth*
+
+GoAuth
+------
 
 GoAuth access tokens must be acquired from the Globus Nexus API. For
 testing, the simplest method is to use a command line tool like curl
