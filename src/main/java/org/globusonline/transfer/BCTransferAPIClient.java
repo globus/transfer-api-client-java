@@ -85,7 +85,7 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
                 baseUrl = args[5];
 
             BCTransferAPIClient c = new BCTransferAPIClient(username,
-                                                FORMAT_XML, cafile, certfile,
+                                                FORMAT_JSON, cafile, certfile,
                                                 keyfile, baseUrl);
             HttpsURLConnection r = c.request("GET", path);
             BCTransferAPIClient.printResult(r);

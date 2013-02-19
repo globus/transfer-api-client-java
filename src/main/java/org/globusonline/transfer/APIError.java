@@ -62,27 +62,6 @@ public class APIError extends Exception {
         this.message = message;
     }
 
-    /**
-     * Fill the error fields from an XML DOM Document.
-     */
-    public void parseDocument(Document errorDocument) {
-        NodeList nodes = errorDocument.getElementsByTagName("resource");
-        if (nodes.getLength() > 0)
-            resource = nodes.item(0).getFirstChild().getNodeValue();
-
-        nodes = errorDocument.getElementsByTagName("request_id");
-        if (nodes.getLength() > 0)
-            requestId = nodes.item(0).getFirstChild().getNodeValue();
-
-        nodes = errorDocument.getElementsByTagName("code");
-        if (nodes.getLength() > 0)
-            code = nodes.item(0).getFirstChild().getNodeValue();
-
-        nodes = errorDocument.getElementsByTagName("message");
-        if (nodes.getLength() > 0)
-            message = nodes.item(0).getFirstChild().getNodeValue();
-    }
-
     public String toString() {
         return code + "(" + statusCode + " "
                + statusMessage + ") on request '" + requestId

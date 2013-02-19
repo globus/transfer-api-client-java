@@ -60,7 +60,6 @@ public class BaseTransferAPIClient {
                     "https://transfer.api.globusonline.org/" + VERSION;
 
     public static final String FORMAT_JSON = "application/json";
-    public static final String FORMAT_XML = "application/xml";
     public static final String FORMAT_HTML = "application/xhtml+xml";
     public static final String FORMAT_DEFAULT = FORMAT_JSON;
 
