@@ -110,6 +110,48 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
             throws KeyManagementException, NoSuchAlgorithmException {
         this(username, format, trustedCAFile, certFile, keyFile, null);
     }
+    
+	/**
+	 * Create a client for the user.
+	 * 
+	 * @param username
+	 *            the Globus Online user to sign in to the API with.
+	 * @param format
+	 *            the content type to request from the server for responses. Use
+	 *            one of the FORMAT_ constants.
+	 * @param trustedCAFile
+	 *            path to a PEM file with a list of certificates to trust for
+	 *            verifying the server certificate. If null, just use the trust
+	 *            store configured by property files and properties passed on
+	 *            the command line.
+	 * @param keyManagers
+	 *            the keymanager(s) that contain the certificate (chain) to use
+	 *            for authentication. If null, just use the trust store
+	 *            configured by property files and properties passed on the
+	 *            command line.
+	 * @param baseUrl
+	 *            alternate base URL of the service; can be used to connect to
+	 *            different versions of the API and instances running on
+	 *            alternate servers. If null, the URL of the latest version
+	 *            running on the production server is used.
+	 */
+	public BCTransferAPIClient(String username, String format,
+			String trustedCAFile, KeyManager[] keyManagers, String baseUrl)
+					throws KeyManagementException, NoSuchAlgorithmException {
+		super(username, format, null, null, baseUrl);
+
+		if (trustedCAFile != null) {
+			try {
+				this.trustManagers = createTrustManagers(trustedCAFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		this.keyManagers = keyManagers;
+
+		initSocketFactory(true);
+	}
 
     /**
      * Create a client for the user.
