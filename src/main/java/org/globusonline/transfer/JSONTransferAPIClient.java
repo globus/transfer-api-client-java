@@ -16,35 +16,23 @@
  */
 package org.globusonline.transfer;
 
-import java.io.*;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.List;
-import java.util.Iterator;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
-import java.net.URL;
-
-import java.security.Security;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.security.KeyStore;
-import java.security.KeyPair;
 import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
 
-import org.json.JSONObject;
 import org.json.JSONException;
-
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.json.JSONObject;
 
 
 /**
@@ -94,18 +82,16 @@ public class JSONTransferAPIClient extends BCTransferAPIClient {
 
     public JSONTransferAPIClient(String username)
             throws KeyManagementException, NoSuchAlgorithmException {
-        this(username, null, null, null, null);
+        this(username, null, (String)null, (String)null, null);
     }
 
     public JSONTransferAPIClient(String username, String baseUrl)
             throws KeyManagementException, NoSuchAlgorithmException {
-        this(username, null, null, null, baseUrl);
+        this(username, null, (String)null, (String)null, baseUrl);
     }
-
-    public JSONTransferAPIClient(String username, String trustedCAFile,
-                                 String baseUrl)
-    throws KeyManagementException, NoSuchAlgorithmException {
-        this(username, trustedCAFile, null, null, baseUrl);
+    
+    public JSONTransferAPIClient(String username, String cafile, String baseUrl) throws KeyManagementException, NoSuchAlgorithmException {
+    	this(username, cafile, (String)null, (String)null, baseUrl);
     }
 
     public JSONTransferAPIClient(String username,
@@ -143,6 +129,35 @@ public class JSONTransferAPIClient extends BCTransferAPIClient {
             throws KeyManagementException, NoSuchAlgorithmException {
         super(username, FORMAT_JSON, trustedCAFile, certFile, keyFile, baseUrl);
     }
+    
+	/**
+	 * Create a client for the user.
+	 * 
+	 * @param username
+	 *            the Globus Online user to sign in to the API with.
+	 * @param trustedCAFile
+	 *            path to a PEM file with a list of certificates to trust for
+	 *            verifying the server certificate. If null, just use the trust
+	 *            store configured by property files and properties passed on
+	 *            the command line.
+	 * @param keyManagers
+	 *            the keymanager(s) that contain the certificate (chain) to use
+	 *            for authentication. If null, just use the trust store
+	 *            configured by property files and properties passed on the
+	 *            command line.
+	 * @param baseUrl
+	 *            alternate base URL of the service; can be used to connect to
+	 *            different versions of the API and instances running on
+	 *            alternate servers. If null, the URL of the latest version
+	 *            running on the production server is used.
+	 */
+    public JSONTransferAPIClient(String username,
+            String trustedCAFile, KeyManager[] keymanagers, String baseUrl)
+throws KeyManagementException, NoSuchAlgorithmException {
+    	super(username, FORMAT_JSON, trustedCAFile, keymanagers, baseUrl);
+    }
+    
+    
 
     protected APIError constructAPIError(int statusCode, String statusMessage,
                                          String errorCode, InputStream input) {
