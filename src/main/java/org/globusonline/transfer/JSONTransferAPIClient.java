@@ -26,6 +26,7 @@ import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
@@ -89,7 +90,7 @@ public class JSONTransferAPIClient extends BCTransferAPIClient {
             throws KeyManagementException, NoSuchAlgorithmException {
         this(username, null, (String)null, (String)null, baseUrl);
     }
-    
+
     public JSONTransferAPIClient(String username, String cafile, String baseUrl) throws KeyManagementException, NoSuchAlgorithmException {
     	this(username, cafile, (String)null, (String)null, baseUrl);
     }
@@ -129,10 +130,10 @@ public class JSONTransferAPIClient extends BCTransferAPIClient {
             throws KeyManagementException, NoSuchAlgorithmException {
         super(username, FORMAT_JSON, trustedCAFile, certFile, keyFile, baseUrl);
     }
-    
+
 	/**
 	 * Create a client for the user.
-	 * 
+	 *
 	 * @param username
 	 *            the Globus Online user to sign in to the API with.
 	 * @param trustedCAFile
@@ -156,8 +157,6 @@ public class JSONTransferAPIClient extends BCTransferAPIClient {
 throws KeyManagementException, NoSuchAlgorithmException {
     	super(username, FORMAT_JSON, trustedCAFile, keymanagers, baseUrl);
     }
-    
-    
 
     protected APIError constructAPIError(int statusCode, String statusMessage,
                                          String errorCode, InputStream input) {
@@ -250,6 +249,32 @@ throws KeyManagementException, NoSuchAlgorithmException {
         c.disconnect();
 
         return result;
+    }
+
+    public Result endpointDeactivate(String endpointName)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        String resource = endpointPath(endpointName) + "/deactivate";
+        return postResult(resource, null);
+    }
+
+    public Result endpointAutoactivate(String endpointName,
+                                       Map<String, String> queryParams)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        String resource = endpointPath(endpointName) + "/autoactivate";
+        return postResult(resource, null);
+    }
+
+    public Result endpointLs(String endpointName, String path)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        String resource = endpointPath(endpointName) + "/ls";
+        Map<String, String> params = new HashMap<String, String>();
+        if (path != null) {
+            params.put("path", path);
+        }
+        return getResult(resource, params);
     }
 
     public static class Result {

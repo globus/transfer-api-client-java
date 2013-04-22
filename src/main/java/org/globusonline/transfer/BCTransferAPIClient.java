@@ -140,13 +140,25 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
 					throws KeyManagementException, NoSuchAlgorithmException {
 		super(username, format, null, null, baseUrl);
 
+        if (trustedCAFile == null) {
+            if (baseUrl == PROD_BASE_URL || baseUrl == QA_BASE_URL) {
+                // Use GoDaddy CA bundle
+                trustedCAFile = getClass().getResource(
+                                        "gd-bundle_ca.cert").toString();
+            } else if (baseUrl == TEST_BASE_URL) {
+                // Use DOE CA bundle
+                trustedCAFile = getClass().getResource(
+                                        "doe-bundle_ca.cert").toString();
+            }
+        }
+
 		if (trustedCAFile != null) {
 			try {
 				this.trustManagers = createTrustManagers(trustedCAFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+        }
 
 		this.keyManagers = keyManagers;
 

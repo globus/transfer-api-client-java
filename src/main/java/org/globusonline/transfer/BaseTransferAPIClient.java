@@ -58,8 +58,13 @@ public class BaseTransferAPIClient {
     protected SSLSocketFactory socketFactory;
 
     static final String VERSION = "v0.10";
-    static final String DEFAULT_BASE_URL =
+    static final String PROD_BASE_URL =
                     "https://transfer.api.globusonline.org/" + VERSION;
+    static final String QA_BASE_URL =
+                    "https://transfer.qa.api.globusonline.org/" + VERSION;
+    static final String TEST_BASE_URL =
+                    "https://transfer.test.api.globusonline.org/" + VERSION;
+    static final String DEFAULT_BASE_URL = PROD_BASE_URL;
 
     public static final String FORMAT_JSON = "application/json";
     public static final String FORMAT_HTML = "application/xhtml+xml";
