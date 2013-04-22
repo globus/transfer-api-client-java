@@ -150,12 +150,12 @@ public class DelegateProxyActivation {
         return certChain;
     }
 
-    private static String readEntireFile(String filename) throws IOException {
+    public static String readEntireFile(String filename) throws IOException {
         FileReader in = new FileReader(filename);
         return readEntireStream(in);
     }
 
-    private static String readEntireStream(InputStreamReader in)
+    public static String readEntireStream(InputStreamReader in)
                                                     throws IOException {
         StringBuilder contents = new StringBuilder();
         char[] buffer = new char[4096];
