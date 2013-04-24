@@ -27,6 +27,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.HashMap;
+import java.net.URLEncoder;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
@@ -263,7 +264,7 @@ throws KeyManagementException, NoSuchAlgorithmException {
         throws IOException, MalformedURLException, GeneralSecurityException,
                JSONException, APIError {
         String resource = endpointPath(endpointName) + "/autoactivate";
-        return postResult(resource, null);
+        return postResult(resource, queryParams);
     }
 
     public Result endpointLs(String endpointName, String path)
@@ -274,6 +275,32 @@ throws KeyManagementException, NoSuchAlgorithmException {
         if (path != null) {
             params.put("path", path);
         }
+        return getResult(resource, params);
+    }
+
+    public String getSubmissionId()
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        Result r = getResult("/submission_id");
+        return r.document.getString("value");
+    }
+
+    public Result transfer(JSONObject document)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        return postResult("/transfer", document);
+    }
+
+    public Result transfer(TransferDocument document)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        return transfer(document.getJSONObject());
+    }
+
+    public Result task(String taskId, Map<String, String> params)
+        throws IOException, MalformedURLException, GeneralSecurityException,
+               JSONException, APIError {
+        String resource = "/task/" + taskId;
         return getResult(resource, params);
     }
 
