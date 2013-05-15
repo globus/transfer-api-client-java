@@ -264,7 +264,7 @@ throws KeyManagementException, NoSuchAlgorithmException {
         throws IOException, MalformedURLException, GeneralSecurityException,
                JSONException, APIError {
         String resource = endpointPath(endpointName) + "/autoactivate";
-        return postResult(resource, queryParams);
+        return postResult(resource, null, queryParams);
     }
 
     public Result endpointLs(String endpointName, String path)

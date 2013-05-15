@@ -2,7 +2,6 @@
   <description>Example client for the globusonline Transfer API.</description>
 
   <property name="runarg.username" value="CHANGEME"/>
-  <property name="runarg.trustedCAFile" value="../doe_bundle.cert"/>
   <property name="runarg.clientCert" value="/tmp/x509up_u1000"/>
   <property name="runarg.clientKey" value="/tmp/x509up_u1000"/>
   <property name="runarg.baseUrl"
@@ -53,7 +52,6 @@
          <path location="${jar.dir}/${ant.project.name}.jar"/>
       </classpath>
       <arg value="${runarg.username}"/>
-      <arg file="${runarg.trustedCAFile}"/>
       <arg file="${runarg.clientCert}"/>
       <arg file="${runarg.clientKey}"/>
       <arg value="${runarg.baseUrl}"/>

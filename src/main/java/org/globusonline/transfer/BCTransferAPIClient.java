@@ -141,15 +141,10 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
 		super(username, format, null, null, baseUrl);
 
         if (trustedCAFile == null) {
-            if (baseUrl == PROD_BASE_URL || baseUrl == QA_BASE_URL) {
-                // Use GoDaddy CA bundle
-                trustedCAFile = getClass().getResource(
-                                        "gd-bundle_ca.cert").toString();
-            } else if (baseUrl == TEST_BASE_URL) {
-                // Use DOE CA bundle
-                trustedCAFile = getClass().getResource(
-                                        "doe-bundle_ca.cert").toString();
-            }
+            // Use default CA file that includes GoDaddy, InCommon,
+            // and GlobusOnline.
+            trustedCAFile = getClass().getResource(
+                                    "all-bundle_ca.cert").toString();
         }
 
 		if (trustedCAFile != null) {
