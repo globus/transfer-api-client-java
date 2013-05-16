@@ -70,7 +70,7 @@ public class BaseTransferAPIClient {
     public static final String FORMAT_HTML = "application/xhtml+xml";
     public static final String FORMAT_DEFAULT = FORMAT_JSON;
 
-    static final String CLIENT_VERSION = "0.10.7";
+    static final String CLIENT_VERSION = "0.10.8";
 
     public static void main(String[] args) {
         BaseTransferAPIClient c = new BaseTransferAPIClient(args[0],
