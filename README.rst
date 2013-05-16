@@ -121,3 +121,23 @@ avoid putting it in your shell history as well. For example in bash::
 
 History will store the commands before variable and subcommand expansion, so
 it will not include the token value.
+
+
+Changlog
+========
+
+0.10.8
+------
+
+- Add InCommon CA and simplify CA handling
+- Remove CA file arg from Example and GoauthExample
+
+0.10.7
+------
+
+- Add CA files as resource
+- Support delegate_proxy activation
+- Add some high level methods to JSON client
+- Fix for thread-safety issue
+- Remove unmaintained XML support
+- Add goauth support
