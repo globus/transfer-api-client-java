@@ -66,8 +66,7 @@ Using a certificate fetched with myproxy-logon for local user with id 1000::
     GO_USERNAME="..."
 
     java -cp lib/bcprov-jdk16-146.jar:build/jar/TransferAPIClient.jar \
-        org.globusonline.transfer.Example $GO_USERNAME \
-        ca/gd-bundle_ca.cert "$USER_CERT" "$USER_KEY"
+        org.globusonline.transfer.Example $GO_USERNAME "$USER_CERT" "$USER_KEY"
 
 For this to work the certificate must be signed by a trusted grid CA and
 associated with your GO account.
@@ -85,7 +84,7 @@ GO password::
 
     curl --user $GO_USERNAME 'https://nexus.api.globusonline.org/goauth/token?grant_type=client_credentials'
 
-The Nexus sample librarie also has a method for getting client credentials:
+The Nexus sample library also has a method for getting client credentials:
 https://github.com/globusonline/java-nexus-client
 see ``org.globusonline.nexus.GoauthClient.getClientOnlyAccessToken``.
 
@@ -118,7 +117,27 @@ avoid putting it in your shell history as well. For example in bash::
 
     java -cp lib/bcprov-jdk16-146.jar:build/jar/TransferAPIClient.jar \
         org.globusonline.transfer.GoauthExample $GO_USERNAME \
-        ca/gd-bundle_ca.cert "$ACCESS_TOKEN"
+        "$ACCESS_TOKEN"
 
 History will store the commands before variable and subcommand expansion, so
 it will not include the token value.
+
+
+Changlog
+========
+
+0.10.8
+------
+
+- Add InCommon CA and simplify CA handling
+- Remove CA file arg from Example and GoauthExample
+
+0.10.7
+------
+
+- Add CA files as resource
+- Support delegate_proxy activation
+- Add some high level methods to JSON client
+- Fix for thread-safety issue
+- Remove unmaintained XML support
+- Add goauth support

@@ -140,13 +140,20 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
 					throws KeyManagementException, NoSuchAlgorithmException {
 		super(username, format, null, null, baseUrl);
 
+        if (trustedCAFile == null) {
+            // Use default CA file that includes GoDaddy, InCommon,
+            // and GlobusOnline.
+            trustedCAFile = getClass().getResource(
+                                    "all-bundle_ca.cert").toString();
+        }
+
 		if (trustedCAFile != null) {
 			try {
 				this.trustManagers = createTrustManagers(trustedCAFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+        }
 
 		this.keyManagers = keyManagers;
 

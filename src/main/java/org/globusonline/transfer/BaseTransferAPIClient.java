@@ -48,7 +48,7 @@ public class BaseTransferAPIClient {
     protected String baseUrl;
     protected String format;
     protected Authenticator authenticator;
-    
+
     protected boolean useMultiThreaded = false;
 
     protected int timeout = 30 * 1000; // 30 seconds, in milliseconds.
@@ -58,14 +58,19 @@ public class BaseTransferAPIClient {
     protected SSLSocketFactory socketFactory;
 
     static final String VERSION = "v0.10";
-    static final String DEFAULT_BASE_URL =
+    static final String PROD_BASE_URL =
                     "https://transfer.api.globusonline.org/" + VERSION;
+    static final String QA_BASE_URL =
+                    "https://transfer.qa.api.globusonline.org/" + VERSION;
+    static final String TEST_BASE_URL =
+                    "https://transfer.test.api.globusonline.org/" + VERSION;
+    static final String DEFAULT_BASE_URL = PROD_BASE_URL;
 
     public static final String FORMAT_JSON = "application/json";
     public static final String FORMAT_HTML = "application/xhtml+xml";
     public static final String FORMAT_DEFAULT = FORMAT_JSON;
 
-    static final String CLIENT_VERSION = "0.10.6";
+    static final String CLIENT_VERSION = "0.10.8";
 
     public static void main(String[] args) {
         BaseTransferAPIClient c = new BaseTransferAPIClient(args[0],
@@ -215,24 +220,25 @@ public class BaseTransferAPIClient {
     public void setConnectTimeout(int milliseconds) {
         this.timeout = milliseconds;
     }
-    
+
 	/**
 	 * Enables this client to be used in a multithreaded environement.
-	 * 
-	 * It seems the SSLSocketFactory is not threadsafe, which means that if this
-	 * class is used in a multithreaded environment there can be ssl connection
-	 * issues. In order to make it thread-safe we need to create a SSLSocketFactory
-	 * for every request. 
-	 * By default this is not done, since setting this
-	 * options causes a (small, but noticable) performance hit.
-	 * 
-	 * {@link ExampleParallel} shows an example of how to test multiple threads.
-	 * 
-	 * @param multiThreaded whether to enable multi-thread support
+	 *
+     * It seems the SSLSocketFactory is not threadsafe, which means that
+     * if this class is used in a multithreaded environment there can be
+     * ssl connection issues. In order to make it thread-safe we need to
+     * create a SSLSocketFactory for every request.
+     *
+     * By default this is not done, since setting this options causes a
+     * (small, but noticable) performance hit.
+	 *
+     * {@link ExampleParallel} shows an example of how to test multiple
+     * threads.
+	 *
+     * @param multiThreaded whether to enable multi-thread support
 	 */
-	public void setUseMultiThreaded(boolean multiThreaded) {
-		this.useMultiThreaded = multiThreaded;
-	}
+    public void setUseMultiThreaded(boolean multiThreaded) {
+    this.useMultiThreaded = multiThreaded; }
 
     protected SSLSocketFactory createSocketFactory() {
     	try {
@@ -249,7 +255,7 @@ public class BaseTransferAPIClient {
             this.socketFactory = createSocketFactory();
         }
     }
-    
+
     public static void printResult(HttpsURLConnection c)
                     throws IOException, GeneralSecurityException, APIError {
         int code = c.getResponseCode();

@@ -22,30 +22,26 @@ public class Example {
         if (args.length < 1) {
             System.err.println(
                 "Usage: java org.globusonline.transfer.Example "
-                + "username [cafile certfile keyfile [baseurl]]]");
+                + "username [certfile keyfile [baseurl]]]");
             System.exit(1);
         }
         String username = args[0];
 
-        String cafile = null;
-        if (args.length > 1 && args[1].length() > 0)
-            cafile = args[1];
-
         String certfile = null;
-        if (args.length > 2 && args[2].length() > 0)
-            certfile = args[2];
+        if (args.length > 1 && args[1].length() > 0)
+            certfile = args[1];
 
         String keyfile = null;
-        if (args.length > 3 && args[3].length() > 0)
-            keyfile = args[3];
+        if (args.length > 2 && args[2].length() > 0)
+            keyfile = args[2];
 
         String baseUrl = null;
-        if (args.length > 4 && args[4].length() > 0)
-            baseUrl = args[4];
+        if (args.length > 3 && args[3].length() > 0)
+            baseUrl = args[3];
 
         try {
             JSONTransferAPIClient c = new JSONTransferAPIClient(username,
-                                         cafile, certfile, keyfile, baseUrl);
+                                         null, certfile, keyfile, baseUrl);
             System.out.println("base url: " + c.getBaseUrl());
             Example e = new Example(c);
             e.run();
