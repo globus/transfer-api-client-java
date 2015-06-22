@@ -64,7 +64,7 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
             }
             String username = args[0];
 
-            String path = "/tasksummary";
+            String path = "/endpoint_list";
             if (args.length > 1)
                 path = args[1];
 

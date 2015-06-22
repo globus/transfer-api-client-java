@@ -55,7 +55,6 @@ public class Example {
         JSONTransferAPIClient.Result r;
         System.out.println("=== Before Transfer ===");
 
-        displayTasksummary();
         displayTaskList(60 * 60 * 24 * 7); // tasks at most a week old
         //displayEndpointList();
 
@@ -91,7 +90,6 @@ public class Example {
 
         System.out.println("=== After Transfer ===");
 
-        displayTasksummary();
         displayLs("go#ep2", "~");
 
         System.out.println("=== Endpoint Management ===");
@@ -115,20 +113,6 @@ public class Example {
             r = client.getResult(BaseTransferAPIClient.endpointPath(copyName));
         } catch(APIError e) {
             System.out.println("get on deleted endpoint raised APIError: " + e);
-        }
-    }
-
-    public void displayTasksummary()
-    throws IOException, JSONException, GeneralSecurityException, APIError {
-        JSONTransferAPIClient.Result r = client.getResult("/tasksummary");
-        System.out.println("Task Summary for " + client.getUsername()
-                           + ": ");
-        Iterator keysIter = r.document.sortedKeys();
-        while (keysIter.hasNext()) {
-            String key = (String)keysIter.next();
-            if (!key.equals("DATA_TYPE"))
-                System.out.println("  " + key + ": "
-                                   + r.document.getString(key));
         }
     }
 

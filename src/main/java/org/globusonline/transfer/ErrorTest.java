@@ -55,7 +55,7 @@ public class ErrorTest {
             c = new JSONTransferAPIClient(username,
                                           cafile, null, null, baseUrl);
             try {
-                c.getResult("/tasksummary");
+                c.getResult("/endpoint_list");
             } catch (APIError e) {
                 e.printStackTrace();
             }
@@ -75,7 +75,7 @@ public class ErrorTest {
         System.out.println("=== 400 Bad Request ===");
         try {
             JSONTransferAPIClient.Result r = client.getResult(
-                                        "/tasksummary?filter=nosuchfield:1");
+                                        "/endpoint_list?filter=nosuchfield:1");
         } catch (APIError e) {
             e.printStackTrace();
         }

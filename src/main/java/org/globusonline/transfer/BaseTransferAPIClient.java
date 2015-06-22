@@ -76,7 +76,7 @@ public class BaseTransferAPIClient {
         BaseTransferAPIClient c = new BaseTransferAPIClient(args[0],
                                         BaseTransferAPIClient.FORMAT_JSON);
         try {
-            HttpsURLConnection r = c.request("GET", "/tasksummary");
+            HttpsURLConnection r = c.request("GET", "/endpoint_list");
             BaseTransferAPIClient.printResult(r);
             r.disconnect();
         } catch (Exception e) {
