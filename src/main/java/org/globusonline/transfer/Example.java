@@ -67,16 +67,16 @@ public class Example {
         displayLs("go#ep1", "~");
         displayLs("go#ep2", "~");
 
-        r = client.getResult("/transfer/submission_id");
+        r = client.getResult("/submission_id");
         String submissionId = r.document.getString("value");
         JSONObject transfer = new JSONObject();
         transfer.put("DATA_TYPE", "transfer");
         transfer.put("submission_id", submissionId);
+        transfer.put("source_endpoint", "go#ep1");
+        transfer.put("destination_endpoint", "go#ep2");
         JSONObject item = new JSONObject();
         item.put("DATA_TYPE", "transfer_item");
-        item.put("source_endpoint", "go#ep1");
         item.put("source_path", "~/.bashrc");
-        item.put("destination_endpoint", "go#ep2");
         item.put("destination_path", "~/api-example-bashrc-copy");
         transfer.append("DATA", item);
 
