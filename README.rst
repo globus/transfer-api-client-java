@@ -10,11 +10,11 @@ bcprov jar for your JDK release:
 http://www.bouncycastle.org/latest_releases.html
 
 and place it in a lib sub directory. The "ext" version with the IDEA algorithm
-is not required. Tested with jdk16 versions 145 and 146.
+is not required. Tested with bouncy castle 1.54 and jdk8.
 
 For example::
 
-    VERSION=jdk16-146
+    VERSION=jdk15on-154
     mkdir -p lib
     cd lib
     wget http://www.bouncycastle.org/download/bcprov-${VERSION}.jar
@@ -53,24 +53,8 @@ transferring a dot file between the tutorial endpoints and creating and then
 deleting an endpoint. All users have access to the tutorial endpoints
 (subject to a small quota), so it should work for any GO user.
 
-There are two versions - one using X509 authentication and another using
-Goauth; both execute the same API commands after authenticating.
-
-X509 Authentication
--------------------
-
-Using a certificate fetched with myproxy-logon for local user with id 1000::
-
-    USER_CERT=/tmp/x509up_u1000
-    USER_KEY=/tmp/x509up_u1000
-    GO_USERNAME="..."
-
-    java -cp lib/bcprov-jdk16-146.jar:build/jar/TransferAPIClient.jar \
-        org.globusonline.transfer.Example $GO_USERNAME "$USER_CERT" "$USER_KEY"
-
-For this to work the certificate must be signed by a trusted grid CA and
-associated with your GO account.
-
+New clients should use GoAuth for authentication, X.509 authentication is
+deprecated and will be removed in the near future.
 
 GoAuth
 ------
@@ -115,16 +99,39 @@ avoid putting it in your shell history as well. For example in bash::
     ACCESS_TOKEN=$(cat /path/to/access_token_text_file)
     GO_USERNAME="..."
 
-    java -cp lib/bcprov-jdk16-146.jar:build/jar/TransferAPIClient.jar \
+    java -cp lib/bcprov-jdk15on-154.jar:build/jar/TransferAPIClient.jar \
         org.globusonline.transfer.GoauthExample $GO_USERNAME \
         "$ACCESS_TOKEN"
 
 History will store the commands before variable and subcommand expansion, so
 it will not include the token value.
 
+X509 Authentication (DEPRECATED)
+-------------------
+
+Using a certificate fetched with myproxy-logon for local user with id 1000::
+
+    USER_CERT=/tmp/x509up_u1000
+    USER_KEY=/tmp/x509up_u1000
+    GO_USERNAME="..."
+
+    java -cp lib/bcprov-jdk15on-154.jar:build/jar/TransferAPIClient.jar \
+        org.globusonline.transfer.Example $GO_USERNAME "$USER_CERT" "$USER_KEY"
+
+For this to work the certificate must be signed by a trusted grid CA and
+associated with your GO account.
+
 
 Changlog
 ========
+
+0.10.9
+------
+- Update for Bouncy Castle 1.54
+- Deprecate X.509 auth
+- Update examples
+- Use endpoint ids instead of endpoint canonical_name in URL args
+- Remove use of deprecated endpoint_list API
 
 0.10.8
 ------

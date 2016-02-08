@@ -70,13 +70,14 @@ public class BaseTransferAPIClient {
     public static final String FORMAT_HTML = "application/xhtml+xml";
     public static final String FORMAT_DEFAULT = FORMAT_JSON;
 
-    static final String CLIENT_VERSION = "0.10.8";
+    static final String CLIENT_VERSION = "0.10.9";
 
     public static void main(String[] args) {
         BaseTransferAPIClient c = new BaseTransferAPIClient(args[0],
                                         BaseTransferAPIClient.FORMAT_JSON);
         try {
-            HttpsURLConnection r = c.request("GET", "/endpoint_list");
+            HttpsURLConnection r = c.request("GET",
+                                "/endpoint_search?filter_scope=my-endpoints");
             BaseTransferAPIClient.printResult(r);
             r.disconnect();
         } catch (Exception e) {

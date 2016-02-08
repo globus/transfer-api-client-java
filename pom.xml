@@ -81,8 +81,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk15</artifactId>
-			<version>145</version>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>154</version>
 		</dependency>
 	</dependencies>
 	<name>GlobusOnline transfer API client in Java</name>

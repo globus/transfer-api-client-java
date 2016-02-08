@@ -42,7 +42,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.openssl.PEMReader;
+import org.bouncycastle.util.io.pem.PemReader;
 
 /**
  * Extension to the base client which supports reading PEM files using
@@ -64,7 +64,7 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
             }
             String username = args[0];
 
-            String path = "/endpoint_list";
+            String path = "/endpoint_search?filter_scope=my-endpoints";
             if (args.length > 1)
                 path = args[1];
 
@@ -220,12 +220,12 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
         // TODO: wrap in friendly exception, it's a user error not a
         // programming error if the file contains a non-cert.
         FileReader fileReader = new FileReader(trustedCAFile);
-        PEMReader r = new PEMReader(fileReader);
+        PemReader r = new PemReader(fileReader);
         X509Certificate cert = null;
         try {
             Object o = null;
             int i = 0;
-            while ((o = r.readObject()) != null) {
+            while ((o = r.readPemObject()) != null) {
                 cert = (X509Certificate) o;
 //                System.out.println("trusted cert subject: "
 //                                   + cert.getSubjectX500Principal());
@@ -258,11 +258,11 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
         // Read the key. Ignore any none-key data in the file, to
         // support PEM files containing both certs and keys.
         FileReader fileReader = new FileReader(keyFile);
-        PEMReader r = new PEMReader(fileReader);
+        PemReader r = new PemReader(fileReader);
         KeyPair keyPair = null;
         try {
             Object o = null;
-            while ((o = r.readObject()) != null) {
+            while ((o = r.readPemObject()) != null) {
                 if (o instanceof KeyPair) {
                     keyPair = (KeyPair) o;
                 }
@@ -275,13 +275,13 @@ public class BCTransferAPIClient extends BaseTransferAPIClient {
         // Read the cert(s). Ignore any none-cert data in the file, to
         // support PEM files containing both certs and keys.
         fileReader = new FileReader(certFile);
-        r = new PEMReader(fileReader);
+        r = new PemReader(fileReader);
         X509Certificate cert = null;
         ArrayList<Certificate> chain = new ArrayList<Certificate>();
         try {
             Object o = null;
             int i = 0;
-            while ((o = r.readObject()) != null) {
+            while ((o = r.readPemObject()) != null) {
                 if (!(o instanceof X509Certificate))
                     continue;
                 cert = (X509Certificate) o;

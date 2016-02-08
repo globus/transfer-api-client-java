@@ -58,22 +58,25 @@ public class Example {
         displayTaskList(60 * 60 * 24 * 7); // tasks at most a week old
         //displayEndpointList();
 
-        if (!autoActivate("go#ep1") || !autoActivate("go#ep2")) {
+        String ep1id = "ddb59aef-6d04-11e5-ba46-22000b92c6ec";
+        String ep2id = "ddb59af0-6d04-11e5-ba46-22000b92c6ec";
+
+        if (!autoActivate(ep1id) || !autoActivate(ep2id)) {
             System.err.println("Unable to auto activate go tutorial endpoints, "
                                + " exiting");
             return;
         }
 
-        displayLs("go#ep1", "~");
-        displayLs("go#ep2", "~");
+        displayLs(ep1id, "~");
+        displayLs(ep2id, "~");
 
         r = client.getResult("/submission_id");
         String submissionId = r.document.getString("value");
         JSONObject transfer = new JSONObject();
         transfer.put("DATA_TYPE", "transfer");
         transfer.put("submission_id", submissionId);
-        transfer.put("source_endpoint", "go#ep1");
-        transfer.put("destination_endpoint", "go#ep2");
+        transfer.put("source_endpoint", ep1id);
+        transfer.put("destination_endpoint", ep2id);
         JSONObject item = new JSONObject();
         item.put("DATA_TYPE", "transfer_item");
         item.put("source_path", "~/.bashrc");
@@ -90,27 +93,29 @@ public class Example {
 
         System.out.println("=== After Transfer ===");
 
-        displayLs("go#ep2", "~");
+        displayLs(ep1id, "~");
 
         System.out.println("=== Endpoint Management ===");
         String code;
         String copyName = "example_copygoep1";
 
-        code = copyEndpoint("go#ep1", copyName);
-        System.out.println("copy go#ep1 to " + copyName + ": " + code);
+        JSONObject copyResult = copyEndpoint(ep1id, copyName);
+        System.out.println("copy go#ep1 to " + copyName + ": "
+                           + copyResult.getString("code"));
+        String copyId = copyResult.getString("id");
 
-        code = setEndpointDescription(copyName, "copy of go#ep1");
+        code = setEndpointDescription(copyId, "copy of go#ep1");
         System.out.println("endpoint update: " + code);
 
-        r = client.getResult(BaseTransferAPIClient.endpointPath(copyName));
+        r = client.getResult(BaseTransferAPIClient.endpointPath(copyId));
         System.out.println("description after update: "
                            + r.document.getString("description"));
 
-        code = deleteEndpoint(copyName);
+        code = deleteEndpoint(copyId);
         System.out.println("endpoint delete: " + code);
 
         try {
-            r = client.getResult(BaseTransferAPIClient.endpointPath(copyName));
+            r = client.getResult(BaseTransferAPIClient.endpointPath(copyId));
         } catch(APIError e) {
             System.out.println("get on deleted endpoint raised APIError: " + e);
         }
@@ -155,9 +160,9 @@ public class Example {
         }
     }
 
-    public boolean autoActivate(String endpointName)
+    public boolean autoActivate(String endpointId)
     throws IOException, JSONException, GeneralSecurityException, APIError {
-        String resource = BaseTransferAPIClient.endpointPath(endpointName)
+        String resource = BaseTransferAPIClient.endpointPath(endpointId)
                           + "/autoactivate";
         JSONTransferAPIClient.Result r = client.postResult(resource, null,
                                                            null);
@@ -168,17 +173,17 @@ public class Example {
         return true;
     }
 
-    public void displayLs(String endpointName, String path)
+    public void displayLs(String endpointId, String path)
     throws IOException, JSONException, GeneralSecurityException, APIError {
         Map<String, String> params = new HashMap<String, String>();
         if (path != null) {
             params.put("path", path);
         }
-        String resource = BaseTransferAPIClient.endpointPath(endpointName)
+        String resource = BaseTransferAPIClient.endpointPath(endpointId)
                           + "/ls";
         JSONTransferAPIClient.Result r = client.getResult(resource, params);
         System.out.println("Contents of " + path + " on "
-                           + endpointName + ":");
+                           + endpointId + ":");
 
         JSONArray fileArray = r.document.getJSONArray("DATA");
         for (int i=0; i < fileArray.length(); i++) {
@@ -222,23 +227,26 @@ public class Example {
         return true;
     }
 
-    public String copyEndpoint(String endpointName, String copyName)
+    public JSONObject copyEndpoint(String endpointId, String copyName)
     throws IOException, JSONException, GeneralSecurityException, APIError {
-        String resource = BaseTransferAPIClient.endpointPath(endpointName);
+        String resource = BaseTransferAPIClient.endpointPath(endpointId);
         JSONTransferAPIClient.Result r = client.getResult(resource);
         JSONObject endpoint = r.document;
+        endpoint.put("display_name", copyName);
         endpoint.put("name", copyName);
         endpoint.remove("username");
         endpoint.remove("canonical_name");
+        endpoint.remove("id");
+        endpoint.remove("subscription_id");
 
         r = client.postResult("/endpoint", endpoint);
-        return r.document.getString("code");
+        return r.document;
     }
 
-    public String setEndpointDescription(String endpointName,
-                                          String description)
+    public String setEndpointDescription(String endpointId,
+                                         String description)
     throws IOException, JSONException, GeneralSecurityException, APIError {
-        String resource = BaseTransferAPIClient.endpointPath(endpointName);
+        String resource = BaseTransferAPIClient.endpointPath(endpointId);
         JSONObject o = new JSONObject();
         o.put("DATA_TYPE", "endpoint");
         o.put("description", description);
@@ -247,9 +255,9 @@ public class Example {
         return r.document.getString("code");
     }
 
-    public String deleteEndpoint(String endpointName)
+    public String deleteEndpoint(String endpointId)
     throws IOException, JSONException, GeneralSecurityException, APIError {
-        String resource = BaseTransferAPIClient.endpointPath(endpointName);
+        String resource = BaseTransferAPIClient.endpointPath(endpointId);
         JSONTransferAPIClient.Result r = client.deleteResult(resource);
         return r.document.getString("code");
     }
